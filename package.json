@@ -1,0 +1,52 @@
+{
+  "name": "VueI18nify",
+  "version": "1.0.0",
+  "description": "",
+  "module": "index.ts",
+  "type": "module",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "scripts": {
+    "start": "bun run src/index.ts"
+  },
+  "devDependencies": {
+    "@types/babel__generator": "^7.6.6",
+    "@types/babel__template": "^7.4.3",
+    "@types/babel__traverse": "^7.20.3",
+    "@types/fs-extra": "^11.0.2",
+    "@types/html-minifier-terser": "^7.0.1",
+    "@types/traverse": "^0.6.36",
+    "@vue/compiler-core": "^3.4.3",
+    "bun-types": "latest",
+    "html-dom-parser": "^5.0.6",
+    "htmlparser2": "^9.0.0",
+    "node-fetch": "^3.3.2",
+    "parse5": "^7.1.2",
+    "rehype": "^13.0.1",
+    "rehype-dom-stringify": "^4.0.0",
+    "rehype-format": "^5.0.0",
+    "rehype-parse": "^9.0.0",
+    "rehype-raw": "^7.0.0",
+    "rehype-stringify": "^10.0.0",
+    "traverse": "^0.6.8",
+    "unified": "^11.0.4",
+    "unist-util-visit": "^5.0.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@babel/generator": "^7.23.6",
+    "@babel/parser": "^7.23.6",
+    "@babel/template": "^7.22.15",
+    "@babel/traverse": "^7.23.7",
+    "@babel/types": "^7.23.6",
+    "@vue/compiler-dom": "^3.3.4",
+    "fs-extra": "^11.1.1",
+    "glob": "^10.3.10",
+    "html-minifier-terser": "^7.2.0",
+    "posthtml": "^0.16.6",
+    "terser": "^5.22.0"
+  }
+}
