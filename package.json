@@ -11,6 +11,14 @@
     "start": "bun run src/index.ts"
   },
   "devDependencies": {
+    "@babel/core": "^7.22.9",
+    "@babel/generator": "^7.25.0",
+    "@babel/parser": "^7.25.3",
+    "@babel/traverse": "^7.25.3",
+    "@babel/types": "^7.25.2",
     "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "fs-extra": "^11.2.0"
   }
 }
