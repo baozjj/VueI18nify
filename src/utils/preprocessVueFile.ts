@@ -1,12 +1,6 @@
 import { parse } from "@vue/compiler-dom";
 import type { ElementNode } from "@vue/compiler-dom";
 
-interface ScriptInfo {
-  type: "setup" | "optionapi";
-  head: string;
-  content: string;
-}
-
 /**
  * 预处理 .vue 文件内容，提取出 template、script 和 styles 部分。
  *

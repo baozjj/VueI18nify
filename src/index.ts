@@ -1,10 +1,4 @@
-import { readFile, writeFile } from "node:fs/promises";
-import { parseJS, parserTemplate } from "./parsers";
-import { JsParserType } from "./types/interface";
-import { transformJS } from "./transformers/transformJS";
-import { generateJS } from "./generates/generateJS";
-import { extname } from "node:path";
-import { preprocessVueFile } from "./utils/preprocessVueFile";
+import { writeFile } from "node:fs/promises";
 import { getFileContent, getFileExtension } from "./utils";
 import { fileTypeHandlers } from "./handlers";
 
