@@ -2,6 +2,9 @@
   <div>
     {{ 你好啊 }}
   </div>
+  <div>
+    {{ 你好啊2 }}
+  </div>
 </template>
 
 <script>
