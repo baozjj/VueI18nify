@@ -8,17 +8,6 @@ const name = "世界";
 const greetingMessage = `你好，${name}！`;
 const farewellMessage = `${name}，再见！`;
 
-// JSXText: JSX 中的文本节点
-const jsxComponent = (
-  <div>
-    欢迎来到我的网站
-    <p>这是一个段落。</p>
-  </div>
-);
-
-// JSXAttribute: JSX 属性中的字符串
-const imageComponent = <img src="image.png" alt="加载失败的图片" />;
-
 // ObjectProperty: 对象属性值
 const messages = {
   welcome: "欢迎",
