@@ -38,11 +38,21 @@ const vue2Test = async () => {
   const fileExtname = extname(vue2Path);
 
   const { template, script, style } = preprocessVueFile(content);
-  console.log("template", template);
-  console.log("script", script);
-  console.log("styles", style);
 
-  const vue2Ast = parserTemplate(content);
+  // 处理 template 部分
+  const templateAst = parserTemplate(template);
+
+  // 处理 script 部分
+  const jsAst = parseJS(script);
+  transformJS(jsAst);
+
+  console.log("templateAst", templateAst);
+  console.log("jsAst", jsAst);
+
+  const scriptRes = `<script> \n ${generateJS(jsAst)} \n</script>`;
+
+  const codeRes = `${template} \n ${scriptRes} \n ${style}`;
+  writeFile(resultJsPath, codeRes);
 
   // const codeRes: string = generateJS(jsAst);
   // console.log("vue2Ast", vue2Ast);
