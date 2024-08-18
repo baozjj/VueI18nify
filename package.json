@@ -19,6 +19,7 @@
     "typescript": "^5.5.4"
   },
   "dependencies": {
+    "@vue/compiler-dom": "^3.4.38",
     "fs-extra": "^11.2.0"
   }
 }

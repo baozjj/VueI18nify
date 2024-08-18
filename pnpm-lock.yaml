@@ -8,12 +8,12 @@ importers:
 
   .:
     dependencies:
+      '@vue/compiler-dom':
+        specifier: ^3.4.38
+        version: 3.4.38
       fs-extra:
         specifier: ^11.2.0
         version: 11.2.0
-      promises:
-        specifier: link:node:fs/promises
-        version: link:node:fs/promises
     devDependencies:
       '@babel/core':
         specifier: ^7.22.9
@@ -129,6 +129,15 @@ packages:
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==, tarball: https://artifactory.devops.xiaohongshu.com/artifactory/api/npm/npm-public/@jridgewell/trace-mapping/-/trace-mapping-0.3.25.tgz}
 
+  '@vue/compiler-core@3.4.38':
+    resolution: {integrity: sha512-8IQOTCWnLFqfHzOGm9+P8OPSEDukgg3Huc92qSG49if/xI2SAwLHQO2qaPQbjCWPBcQoO1WYfXfTACUrWV3c5A==, tarball: https://artifactory.devops.xiaohongshu.com/artifactory/api/npm/npm-public/@vue/compiler-core/-/compiler-core-3.4.38.tgz}
+
+  '@vue/compiler-dom@3.4.38':
+    resolution: {integrity: sha512-Osc/c7ABsHXTsETLgykcOwIxFktHfGSUDkb05V61rocEfsFDcjDLH/IHJSNJP+/Sv9KeN2Lx1V6McZzlSb9EhQ==, tarball: https://artifactory.devops.xiaohongshu.com/artifactory/api/npm/npm-public/@vue/compiler-dom/-/compiler-dom-3.4.38.tgz}
+
+  '@vue/shared@3.4.38':
+    resolution: {integrity: sha512-q0xCiLkuWWQLzVrecPb0RMsNWyxICOjPrcrwxTUEHb1fsnvni4dcuyG7RT/Ie7VPTvnjzIaWzRMUBsrqNj/hhw==, tarball: https://artifactory.devops.xiaohongshu.com/artifactory/api/npm/npm-public/@vue/shared/-/shared-3.4.38.tgz}
+
   ansi-styles@3.2.1:
     resolution: {integrity: sha1-QfuyAkPlCxK+DwS43tvwdSDOhB0=, tarball: https://artifactory.devops.xiaohongshu.com/artifactory/api/npm/npm-public/ansi-styles/download/ansi-styles-3.2.1.tgz}
     engines: {node: '>=4'}
@@ -166,6 +175,10 @@ packages:
   electron-to-chromium@1.5.10:
     resolution: {integrity: sha512-C3RDERDjrNW262GCRvpoer3a0Ksd66CtgDLxMHhzShQ8fhL4kwnpVXsJPAKg9xJjIROXUbLBrvtOzVAjALMIWA==, tarball: https://artifactory.devops.xiaohongshu.com/artifactory/api/npm/npm-public/electron-to-chromium/-/electron-to-chromium-1.5.10.tgz}
 
+  entities@4.5.0:
+    resolution: {integrity: sha1-XSaOpecRPsdMTQM7eepaNaSI+0g=, tarball: https://artifactory.devops.xiaohongshu.com/artifactory/api/npm/npm-public/entities/download/entities-4.5.0.tgz}
+    engines: {node: '>=0.12'}
+
   escalade@3.1.2:
     resolution: {integrity: sha512-ErCHMCae19vR8vQGe50xIsVomy19rg6gFu3+r3jkEO46suLMWBksvVyoGgQV+jOfl84ZSOSlmv6Gxa89PmTGmA==, tarball: https://artifactory.devops.xiaohongshu.com/artifactory/api/npm/npm-public/escalade/-/escalade-3.1.2.tgz}
     engines: {node: '>=6'}
@@ -173,6 +186,9 @@ packages:
   escape-string-regexp@1.0.5:
     resolution: {integrity: sha1-G2HAViGQqN/2rjuyzwIAyhMLhtQ=, tarball: https://artifactory.devops.xiaohongshu.com/artifactory/api/npm/npm-public/escape-string-regexp/download/escape-string-regexp-1.0.5.tgz}
     engines: {node: '>=0.8.0'}
+
+  estree-walker@2.0.2:
+    resolution: {integrity: sha1-UvAQF4wqTBF6d1fP6UKtt9LaTKw=, tarball: https://artifactory.devops.xiaohongshu.com/artifactory/api/npm/npm-public/estree-walker/download/estree-walker-2.0.2.tgz}
 
   fs-extra@11.2.0:
     resolution: {integrity: sha512-PmDi3uwK5nFuXh7XDTlVnS17xJS7vW36is2+w3xcv8SVxiB4NyATf4ctkVY5bkSjX0Y4nbvZCq1/EjtEyr9ktw==, tarball: https://artifactory.devops.xiaohongshu.com/artifactory/api/npm/npm-public/fs-extra/-/fs-extra-11.2.0.tgz}
@@ -224,6 +240,10 @@ packages:
   semver@6.3.1:
     resolution: {integrity: sha1-VW0u+GiRRuRtzqS/3QlfNDTf/LQ=, tarball: https://artifactory.devops.xiaohongshu.com/artifactory/api/npm/npm-public/semver/download/semver-6.3.1.tgz}
     hasBin: true
+
+  source-map-js@1.2.0:
+    resolution: {integrity: sha512-itJW8lvSA0TXEphiRoawsCksnlf8SyvmFzIhltqAHluXd88pkCd+cXJVHTDwdCr0IzwptSm035IHQktUu1QUMg==, tarball: https://artifactory.devops.xiaohongshu.com/artifactory/api/npm/npm-public/source-map-js/-/source-map-js-1.2.0.tgz}
+    engines: {node: '>=0.10.0'}
 
   supports-color@5.5.0:
     resolution: {integrity: sha1-4uaaRKyHcveKHsCzW2id9lMO/I8=, tarball: https://artifactory.devops.xiaohongshu.com/artifactory/api/npm/npm-public/supports-color/download/supports-color-5.5.0.tgz}
@@ -387,6 +407,21 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
+  '@vue/compiler-core@3.4.38':
+    dependencies:
+      '@babel/parser': 7.25.3
+      '@vue/shared': 3.4.38
+      entities: 4.5.0
+      estree-walker: 2.0.2
+      source-map-js: 1.2.0
+
+  '@vue/compiler-dom@3.4.38':
+    dependencies:
+      '@vue/compiler-core': 3.4.38
+      '@vue/shared': 3.4.38
+
+  '@vue/shared@3.4.38': {}
+
   ansi-styles@3.2.1:
     dependencies:
       color-convert: 1.9.3
@@ -420,9 +455,13 @@ snapshots:
 
   electron-to-chromium@1.5.10: {}
 
+  entities@4.5.0: {}
+
   escalade@3.1.2: {}
 
   escape-string-regexp@1.0.5: {}
+
+  estree-walker@2.0.2: {}
 
   fs-extra@11.2.0:
     dependencies:
@@ -461,6 +500,8 @@ snapshots:
   picocolors@1.0.1: {}
 
   semver@6.3.1: {}
+
+  source-map-js@1.2.0: {}
 
   supports-color@5.5.0:
     dependencies:
