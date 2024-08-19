@@ -1,6 +1,6 @@
 import { parse } from "@babel/parser";
 
-import { JsParserType } from "../service/interface";
+import { JsParserType } from "../types/interface";
 
 export const parseJS = (rawCode: string) => {
   const ast = parse(rawCode, {
