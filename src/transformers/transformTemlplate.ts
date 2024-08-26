@@ -12,6 +12,7 @@ export const transformTemplate = (astTree: TemplateChildNode[]): string => {
         break;
       case NodeTypes.TEXT:
         result += transformText(node as TextNode);
+        endTag = false;
         break;
       default:
         endTag = false;
@@ -30,5 +31,6 @@ const transformElement = (node: ElementNode): string => {
 };
 
 function transformText(node: TextNode): string {
-  return node.content;
+  let res = `{{ $t(${node.content}) }}`;
+  return res;
 }

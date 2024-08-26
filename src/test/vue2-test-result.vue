@@ -1,6 +1,7 @@
 <template>
   <div></div>
   <div></div>
+  <div>{{ t(你好啊2) }}</div>
 </template>
 <script>
 export default {

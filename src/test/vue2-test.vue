@@ -5,6 +5,7 @@
   <div>
     {{ 你好啊2 }}
   </div>
+  <div>你好啊2</div>
 </template>
 
 <script>
