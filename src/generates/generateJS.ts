@@ -7,7 +7,7 @@ export function generateJS(ast: Node): string {
       minimal: true, // 生成字符串时尽可能减少转义。
       quotes: "single",
     },
-  });
+  }).code.replace(/;([^;]*)$/, "");
 
-  return output?.code;
+  return output;
 }
