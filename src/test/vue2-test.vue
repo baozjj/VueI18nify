@@ -1,9 +1,7 @@
 <template>
   <div>
-    {{ 你好啊 }}
-  </div>
-  <div>
-    {{ 你好啊2 }}
+    {{ 1 + "123" }}123
+    {{ true ? "阿斯顿" : "阿斯" }}
   </div>
   <div>你好啊2</div>
 </template>
