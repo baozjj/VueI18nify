@@ -5,10 +5,16 @@ import {
   InterpolationNode,
   SimpleExpressionNode,
 } from "@vue/compiler-dom";
-import type { DirectiveNode, TemplateChildNode } from "@vue/compiler-dom";
+import type {
+  AttributeNode,
+  DirectiveNode,
+  TemplateChildNode,
+} from "@vue/compiler-dom";
 import { handleJs } from "../handlers";
 import { containsChinese } from "../utils/regex";
 import { wrapIN18 } from "../utils";
+
+type PropNode = AttributeNode | DirectiveNode;
 
 export const transformTemplate = (astTree: TemplateChildNode[]): string => {
   let result = "";
@@ -52,7 +58,7 @@ const transformElement = (node: ElementNode): string => {
 
 const transformText = (node: TextNode): string => {
   if (!containsChinese(node.content)) return node.content;
-  let res = `{{ $t('${node.content}') }}`;
+  let res = `{{ $t('${node.content.trim()}') }}`;
   return res;
 };
 const transformInterpolation = (node: InterpolationNode): string => {
@@ -65,7 +71,7 @@ const transformInterpolation = (node: InterpolationNode): string => {
   return res;
 };
 
-const processProps = (props) => {
+const processProps = (props: PropNode[]): string => {
   let res = "";
   for (const prop of props) {
     res += processProp(prop);
@@ -73,21 +79,22 @@ const processProps = (props) => {
   return res;
 };
 
-const processProp = (prop) => {
+const processProp = (prop: PropNode): string => {
   let res = " ";
-  console.log("prop.type", prop.type);
 
   switch (prop.type) {
     case NodeTypes.ATTRIBUTE:
-      if (containsChinese(prop.value.content)) {
-        res += `:${prop.name}="${wrapIN18(prop.value.content)}"`;
+      const attr = prop as AttributeNode;
+      const value = attr.value?.content ?? "";
+      if (containsChinese(value)) {
+        res += `:${attr.name}="${wrapIN18(value)}"`;
       } else {
-        res += `${prop.name}="${prop.value.content}"`;
+        res += `${attr.name}="${value}"`;
       }
-
       break;
     case NodeTypes.DIRECTIVE:
-      res += `${prop.rawName}="${handleJs(prop.exp.content)}"`;
+      const dir = prop as DirectiveNode;
+      res += `${dir.rawName}="${handleJs(dir.exp?.content ?? "")}"`;
       break;
   }
   return res;
