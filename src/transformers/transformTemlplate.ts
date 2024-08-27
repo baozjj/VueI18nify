@@ -8,6 +8,7 @@ import {
 import type { DirectiveNode, TemplateChildNode } from "@vue/compiler-dom";
 import { handleJs } from "../handlers";
 import { containsChinese } from "../utils/regex";
+import { wrapIN18 } from "../utils";
 
 export const transformTemplate = (astTree: TemplateChildNode[]): string => {
   let result = "";
@@ -73,14 +74,20 @@ const processProps = (props) => {
 };
 
 const processProp = (prop) => {
-  let res = "";
+  let res = " ";
   console.log("prop.type", prop.type);
 
   switch (prop.type) {
     case NodeTypes.ATTRIBUTE:
+      if (containsChinese(prop.value.content)) {
+        res += `:${prop.name}="${wrapIN18(prop.value.content)}"`;
+      } else {
+        res += `${prop.name}="${prop.value.content}"`;
+      }
+
       break;
     case NodeTypes.DIRECTIVE:
-      res += ` ${prop.rawName}="${handleJs(prop.exp.content)}"`;
+      res += `${prop.rawName}="${handleJs(prop.exp.content)}"`;
       break;
   }
   return res;
