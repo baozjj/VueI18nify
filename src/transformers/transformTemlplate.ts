@@ -5,9 +5,10 @@ import {
   InterpolationNode,
   SimpleExpressionNode,
 } from "@vue/compiler-dom";
-import type { TemplateChildNode } from "@vue/compiler-dom";
+import type { DirectiveNode, TemplateChildNode } from "@vue/compiler-dom";
 import { handleJs } from "../handlers";
 import { containsChinese } from "../utils/regex";
+import { wrapIN18 } from "../utils";
 
 export const transformTemplate = (astTree: TemplateChildNode[]): string => {
   let result = "";
@@ -39,7 +40,12 @@ export const transformTemplate = (astTree: TemplateChildNode[]): string => {
 };
 
 const transformElement = (node: ElementNode): string => {
-  let res = `<${node.tag}>`;
+  let res = `<${node.tag}`;
+  let propsString = "";
+  if (node.props.length !== 0) {
+    propsString = processProps(node.props);
+  }
+  res += `${propsString}>`;
   res += transformTemplate(node.children);
   return res;
 };
@@ -56,5 +62,33 @@ const transformInterpolation = (node: InterpolationNode): string => {
   }
   res = `{{ ${res} }}`;
 
+  return res;
+};
+
+const processProps = (props) => {
+  let res = "";
+  for (const prop of props) {
+    res += processProp(prop);
+  }
+  return res;
+};
+
+const processProp = (prop) => {
+  let res = " ";
+  console.log("prop.type", prop.type);
+
+  switch (prop.type) {
+    case NodeTypes.ATTRIBUTE:
+      if (containsChinese(prop.value.content)) {
+        res += `:${prop.name}="${wrapIN18(prop.value.content)}"`;
+      } else {
+        res += `${prop.name}="${prop.value.content}"`;
+      }
+
+      break;
+    case NodeTypes.DIRECTIVE:
+      res += `${prop.rawName}="${handleJs(prop.exp.content)}"`;
+      break;
+  }
   return res;
 };

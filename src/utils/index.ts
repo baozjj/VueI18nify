@@ -24,3 +24,7 @@ export const getFileExtension = async (filePath: string): Promise<string> => {
     return "";
   }
 };
+
+export const wrapIN18 = (value) => {
+  return `$t('${value}')`;
+};
