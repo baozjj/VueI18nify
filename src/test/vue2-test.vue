@@ -3,7 +3,7 @@
     {{ 1 + "123" }}123
     {{ true ? "阿斯顿" : "阿斯" }}
   </div>
-  <div>你好啊2</div>
+  <div :aaa="func('啊啊啊')">你好啊2</div>
 </template>
 
 <script>
