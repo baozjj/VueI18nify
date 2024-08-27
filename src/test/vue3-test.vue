@@ -30,24 +30,33 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent, ref } from "vue";
+
+export default defineComponent({
   name: "App",
-  data() {
+  setup() {
+    const message = ref("这是一个插值文本");
+    const placeholderText = ref("请输入内容");
+    const linkText = ref("这里");
+
+    const shouldShow = ref(true);
+    const items = ref(["第一项", "第二项", "第三项"]);
+
+    const showMessage = (text: string) => {
+      alert(`提示信息: ${text}`);
+    };
+
     return {
-      message: "这是一个插值文本",
-      placeholderText: "请输入内容",
-      linkText: "这里",
-      shouldShow: true,
-      items: ["第一项", "第二项", "第三项"],
+      message,
+      placeholderText,
+      linkText,
+      shouldShow,
+      items,
+      showMessage,
     };
   },
-  methods: {
-    showMessage(text) {
-      alert(`提示信息: ${text}`);
-    },
-  },
-};
+});
 </script>
 
 <style scoped>
