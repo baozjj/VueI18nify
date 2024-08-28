@@ -7,6 +7,8 @@ import { wrapIN18 } from '../utils'
 type PropNode = AttributeNode | DirectiveNode
 
 export const transformTemplate = (astTree: TemplateChildNode[]): string => {
+  console.log('astTreeastTreeastTree', astTree)
+
   let result = ''
 
   for (const node of astTree) {
@@ -18,6 +20,10 @@ export const transformTemplate = (astTree: TemplateChildNode[]): string => {
         break
       case NodeTypes.TEXT:
         result += transformText(node as TextNode)
+        endTag = false
+        break
+      case NodeTypes.COMMENT:
+        result += (node as CommentNode).loc.source
         endTag = false
         break
       case NodeTypes.INTERPOLATION:
