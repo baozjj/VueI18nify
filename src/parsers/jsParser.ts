@@ -1,12 +1,12 @@
-import { parse } from "@babel/parser";
+import { parse } from '@babel/parser'
 
-import { JsParserType } from "../types/interface";
+import { JsParserType } from '../types/interface'
 
 export const parseJS = (rawCode: string) => {
   const ast = parse(rawCode, {
-    sourceType: "unambiguous",
-    plugins: ["jsx", "typescript"],
-  });
+    sourceType: 'unambiguous',
+    plugins: ['jsx', 'typescript']
+  })
 
-  return ast;
-};
+  return ast
+}

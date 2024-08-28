@@ -35,9 +35,7 @@
     </ul>
 
     <!-- 动态类名和内联样式 -->
-    <p :class="{ highlight: isHighlighted }" :style="{ color: textColor }">
-      动态样式和类名
-    </p>
+    <p :class="{ highlight: isHighlighted }" :style="{ color: textColor }">动态样式和类名</p>
 
     <!-- 插值和HTML混用 -->
     <p>
@@ -93,58 +91,58 @@
 </template>
 
 <script>
-import ChildComponent from "./ChildComponent.vue";
-import ComponentWithSlot from "./ComponentWithSlot.vue";
-import ScopedSlotComponent from "./ScopedSlotComponent.vue";
+import ChildComponent from './ChildComponent.vue'
+import ComponentWithSlot from './ComponentWithSlot.vue'
+import ScopedSlotComponent from './ScopedSlotComponent.vue'
 
 export default {
-  name: "App",
+  name: 'App',
   components: {
     ChildComponent,
     ComponentWithSlot,
-    ScopedSlotComponent,
+    ScopedSlotComponent
   },
   data() {
     return {
-      message: "这是一个插值文本",
-      placeholderText: "请输入内容",
-      linkText: "这里",
+      message: '这是一个插值文本',
+      placeholderText: '请输入内容',
+      linkText: '这里',
       shouldShow: true,
       nestedCondition: false,
       isHighlighted: false,
-      textColor: "red",
-      items: ["第一项", "第二项", "第三项"],
-      childGreeting: "你好，子组件",
-      dynamicValue: "动态内容",
-      dynamicTitle: "动态标题",
-      comments: "注释内容",
-      htmlContent: "<p>动态的HTML内容</p>",
-      formInput: "",
-      formTextarea: "默认文本",
-      formSelect: "选项一",
-      dynamicPart: "动态部分",
-      isTemplateVisible: true,
-    };
+      textColor: 'red',
+      items: ['第一项', '第二项', '第三项'],
+      childGreeting: '你好，子组件',
+      dynamicValue: '动态内容',
+      dynamicTitle: '动态标题',
+      comments: '注释内容',
+      htmlContent: '<p>动态的HTML内容</p>',
+      formInput: '',
+      formTextarea: '默认文本',
+      formSelect: '选项一',
+      dynamicPart: '动态部分',
+      isTemplateVisible: true
+    }
   },
   methods: {
     showMessage(text) {
-      alert(`提示信息: ${text}`);
+      alert(`提示信息: ${text}`)
     },
     log(message) {
-      console.log(message);
+      console.log(message)
     },
     dynamicEventHandler() {
-      console.log("动态事件触发");
-    },
+      console.log('动态事件触发')
+    }
   },
   filters: {
     capitalize(value) {
-      if (!value) return "";
-      value = value.toString();
-      return value.charAt(0).toUpperCase() + value.slice(1);
-    },
-  },
-};
+      if (!value) return ''
+      value = value.toString()
+      return value.charAt(0).toUpperCase() + value.slice(1)
+    }
+  }
+}
 </script>
 
 <style scoped>

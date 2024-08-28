@@ -1,2 +1,2 @@
-export * from "./jsParser";
-export * from "./templateParser";
+export * from './jsParser'
+export * from './templateParser'
