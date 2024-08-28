@@ -1,101 +1,106 @@
-import {
-  NodeTypes,
-  ElementNode,
-  TextNode,
-  InterpolationNode,
-  SimpleExpressionNode,
-} from "@vue/compiler-dom";
+import { NodeTypes } from '@vue/compiler-dom'
 import type {
   AttributeNode,
   DirectiveNode,
   TemplateChildNode,
-} from "@vue/compiler-dom";
-import { handleJs } from "../handlers";
-import { containsChinese } from "../utils/regex";
-import { wrapIN18 } from "../utils";
+  CommentNode,
+  ElementNode,
+  TextNode,
+  InterpolationNode
+} from '@vue/compiler-dom'
+import { handleJs } from '../handlers'
+import { containsChinese } from '../utils/regex'
+import { wrapIN18 } from '../utils'
 
-type PropNode = AttributeNode | DirectiveNode;
+type PropNode = AttributeNode | DirectiveNode
 
 export const transformTemplate = (astTree: TemplateChildNode[]): string => {
-  let result = "";
+  console.log('astTreeastTreeastTree', astTree)
+
+  let result = ''
 
   for (const node of astTree) {
-    let endTag = true;
-    console.log(node.type);
+    let endTag = true
 
     switch (node.type) {
       case NodeTypes.ELEMENT:
-        result += transformElement(node as ElementNode);
-        break;
+        result += transformElement(node as ElementNode)
+        break
       case NodeTypes.TEXT:
-        result += transformText(node as TextNode);
-        endTag = false;
-        break;
+        result += transformText(node as TextNode)
+        endTag = false
+        break
+      case NodeTypes.COMMENT:
+        result += (node as CommentNode).loc.source
+        endTag = false
+        break
       case NodeTypes.INTERPOLATION:
-        result += transformInterpolation(node as InterpolationNode);
-        endTag = false;
-        break;
+        result += transformInterpolation(node as InterpolationNode)
+        endTag = false
+        break
       default:
-        endTag = false;
-        break;
+        endTag = false
+        break
     }
-    if (endTag) result += `\n </${node.tag}>`;
+    if (endTag && 'tag' in node) {
+      result += `\n </${node.tag}>`
+    }
   }
-
-  return result;
-};
+  return result
+}
 
 const transformElement = (node: ElementNode): string => {
-  let res = `<${node.tag}`;
-  let propsString = "";
+  let res = `<${node.tag}`
+
   if (node.props.length !== 0) {
-    propsString = processProps(node.props);
+    res += processProps(node.props)
   }
-  res += `${propsString}>`;
-  res += transformTemplate(node.children);
-  return res;
-};
+  res += '>'
+
+  res += transformTemplate(node.children)
+  return res
+}
 
 const transformText = (node: TextNode): string => {
-  if (!containsChinese(node.content)) return node.content;
-  let res = `{{ $t('${node.content.trim()}') }}`;
-  return res;
-};
+  if (!containsChinese(node.content)) return node.content
+  let res = `{{ $t('${node.content.trim()}') }}`
+  return res
+}
 const transformInterpolation = (node: InterpolationNode): string => {
-  let res = "";
+  let res = ''
   if (node.content.type === NodeTypes.SIMPLE_EXPRESSION) {
-    res = handleJs(node.content.content);
+    res = handleJs(node.content.content?.trim())
   }
-  res = `{{ ${res} }}`;
+  res = `{{ ${res} }}`
 
-  return res;
-};
+  return res
+}
 
 const processProps = (props: PropNode[]): string => {
-  let res = "";
+  let res = ''
   for (const prop of props) {
-    res += processProp(prop);
+    res += processProp(prop)
   }
-  return res;
-};
+  return res
+}
 
 const processProp = (prop: PropNode): string => {
-  let res = " ";
+  let res = ' '
 
   switch (prop.type) {
     case NodeTypes.ATTRIBUTE:
-      const attr = prop as AttributeNode;
-      const value = attr.value?.content ?? "";
+      const attr = prop as AttributeNode
+      const value = attr.value?.content ?? ''
       if (containsChinese(value)) {
-        res += `:${attr.name}="${wrapIN18(value)}"`;
+        res += `:${attr.name}="${wrapIN18(value)}"`
       } else {
-        res += `${attr.name}="${value}"`;
+        res += `${attr.name}="${value}"`
       }
-      break;
+      break
     case NodeTypes.DIRECTIVE:
-      const dir = prop as DirectiveNode;
-      res += `${dir.rawName}="${handleJs(dir.exp?.content ?? "")}"`;
-      break;
+      const dir = prop as DirectiveNode
+      res += `${dir.rawName}="${handleJs(dir.exp?.content ?? '')}"`
+      break
   }
-  return res;
-};
+  return res
+}

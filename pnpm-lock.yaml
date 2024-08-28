@@ -30,6 +30,9 @@ importers:
       '@babel/types':
         specifier: ^7.25.2
         version: 7.25.2
+      prettier:
+        specifier: 3.2.5
+        version: 3.2.5
       typescript:
         specifier: ^5.5.4
         version: 5.5.4
@@ -236,6 +239,11 @@ packages:
 
   picocolors@1.0.1:
     resolution: {integrity: sha512-anP1Z8qwhkbmu7MFP5iTt+wQKXgwzf7zTyGlcdzabySa9vd0Xt392U0rVmz9poOaBj0uHJKyyo9/upk0HrEQew==, tarball: https://artifactory.devops.xiaohongshu.com/artifactory/api/npm/npm-public/picocolors/-/picocolors-1.0.1.tgz}
+
+  prettier@3.2.5:
+    resolution: {integrity: sha512-3/GWa9aOC0YeD7LUfvOG2NiDyhOWRvt1k+rcKhOuYnMY24iiCphgneUfJDyFXd6rZCAnuLBv6UeAULtrhT/F4A==, tarball: https://artifactory.devops.xiaohongshu.com/artifactory/api/npm/npm-public/prettier/-/prettier-3.2.5.tgz}
+    engines: {node: '>=14'}
+    hasBin: true
 
   semver@6.3.1:
     resolution: {integrity: sha1-VW0u+GiRRuRtzqS/3QlfNDTf/LQ=, tarball: https://artifactory.devops.xiaohongshu.com/artifactory/api/npm/npm-public/semver/download/semver-6.3.1.tgz}
@@ -498,6 +506,8 @@ snapshots:
   node-releases@2.0.18: {}
 
   picocolors@1.0.1: {}
+
+  prettier@3.2.5: {}
 
   semver@6.3.1: {}
 

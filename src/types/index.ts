@@ -1,1 +1,1 @@
-export * from "./vueNodeType";
+export * from './vueNodeType'

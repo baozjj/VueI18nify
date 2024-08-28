@@ -48,10 +48,10 @@
     </template>
 
     <!-- 带有过滤器 -->
-    <p>{{ capitalize(message) }}</p>
+    <p>{{ message | capitalize }}</p>
 
     <!-- 动态事件处理 -->
-    <button @click="dynamicEventHandler">动态事件处理</button>
+    <button :click="dynamicEventHandler">动态事件处理</button>
 
     <!-- 嵌套组件 -->
     <ChildComponent :greeting="childGreeting" />
@@ -65,15 +65,13 @@
 
     <!-- 插槽内容 -->
     <ComponentWithSlot>
-      <template #default> 默认插槽内容 </template>
-      <template #namedSlot> 指定插槽内容 </template>
+      <template v-slot:default> 默认插槽内容 </template>
+      <template v-slot:namedSlot> 指定插槽内容 </template>
     </ComponentWithSlot>
 
     <!-- 作用域插槽 -->
-    <ScopedSlotComponent>
-      <template #default="slotProps">
-        <p>{{ slotProps.slotText }}</p>
-      </template>
+    <ScopedSlotComponent v-slot:default="slotProps">
+      <p>{{ slotProps.slotText }}</p>
     </ScopedSlotComponent>
 
     <!-- 模板中的方法调用带有中文参数 -->
@@ -93,7 +91,6 @@
 </template>
 
 <script>
-import { ref } from 'vue'
 import ChildComponent from './ChildComponent.vue'
 import ComponentWithSlot from './ComponentWithSlot.vue'
 import ScopedSlotComponent from './ScopedSlotComponent.vue'
@@ -105,66 +102,44 @@ export default {
     ComponentWithSlot,
     ScopedSlotComponent
   },
-  setup() {
-    const message = ref('这是一个插值文本')
-    const placeholderText = ref('请输入内容')
-    const linkText = ref('这里')
-    const shouldShow = ref(true)
-    const nestedCondition = ref(false)
-    const isHighlighted = ref(false)
-    const textColor = ref('red')
-    const items = ref(['第一项', '第二项', '第三项'])
-    const childGreeting = ref('你好，子组件')
-    const dynamicValue = ref('动态内容')
-    const dynamicTitle = ref('动态标题')
-    const comments = ref('注释内容')
-    const htmlContent = ref('<p>动态的HTML内容</p>')
-    const formInput = ref('')
-    const formTextarea = ref('默认文本')
-    const formSelect = ref('选项一')
-    const dynamicPart = ref('动态部分')
-    const isTemplateVisible = ref(true)
-
-    const showMessage = (text) => {
+  data() {
+    return {
+      message: '这是一个插值文本',
+      placeholderText: '请输入内容',
+      linkText: '这里',
+      shouldShow: true,
+      nestedCondition: false,
+      isHighlighted: false,
+      textColor: 'red',
+      items: ['第一项', '第二项', '第三项'],
+      childGreeting: '你好，子组件',
+      dynamicValue: '动态内容',
+      dynamicTitle: '动态标题',
+      comments: '注释内容',
+      htmlContent: '<p>动态的HTML内容</p>',
+      formInput: '',
+      formTextarea: '默认文本',
+      formSelect: '选项一',
+      dynamicPart: '动态部分',
+      isTemplateVisible: true
+    }
+  },
+  methods: {
+    showMessage(text) {
       alert(`提示信息: ${text}`)
-    }
-
-    const log = (message) => {
+    },
+    log(message) {
       console.log(message)
-    }
-
-    const dynamicEventHandler = () => {
+    },
+    dynamicEventHandler() {
       console.log('动态事件触发')
     }
-
-    const capitalize = (value) => {
+  },
+  filters: {
+    capitalize(value) {
       if (!value) return ''
+      value = value.toString()
       return value.charAt(0).toUpperCase() + value.slice(1)
-    }
-
-    return {
-      message,
-      placeholderText,
-      linkText,
-      shouldShow,
-      nestedCondition,
-      isHighlighted,
-      textColor,
-      items,
-      childGreeting,
-      dynamicValue,
-      dynamicTitle,
-      comments,
-      htmlContent,
-      formInput,
-      formTextarea,
-      formSelect,
-      dynamicPart,
-      isTemplateVisible,
-      showMessage,
-      log,
-      dynamicEventHandler,
-      capitalize
     }
   }
 }

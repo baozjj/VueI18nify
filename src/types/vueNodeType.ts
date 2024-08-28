@@ -25,6 +25,6 @@ export enum vueNodeTypes {
   JS_IF_STATEMENT = 23, // JavaScript 条件语句节点
   JS_ASSIGNMENT_EXPRESSION = 24, // JavaScript 赋值表达式节点
   JS_SEQUENCE_EXPRESSION = 25, // JavaScript 序列表达式节点
-  JS_RETURN_STATEMENT = 26, // JavaScript 返回语句节点
+  JS_RETURN_STATEMENT = 26 // JavaScript 返回语句节点
   // 预留从 27 到 31 是为了未来的新节点类型
 }

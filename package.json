@@ -8,7 +8,8 @@
   "author": "",
   "license": "ISC",
   "scripts": {
-    "start": "bun run src/index.ts"
+    "start": "bun run src/index.ts",
+    "format": "prettier --write src/"
   },
   "devDependencies": {
     "@babel/core": "^7.22.9",
@@ -16,6 +17,7 @@
     "@babel/parser": "^7.25.3",
     "@babel/traverse": "^7.25.3",
     "@babel/types": "^7.25.2",
+    "prettier": "3.2.5",
     "typescript": "^5.5.4"
   },
   "dependencies": {
