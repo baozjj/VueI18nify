@@ -1,5 +1,13 @@
-import { NodeTypes, ElementNode, TextNode, InterpolationNode } from '@vue/compiler-dom'
-import type { AttributeNode, DirectiveNode, TemplateChildNode } from '@vue/compiler-dom'
+import { NodeTypes } from '@vue/compiler-dom'
+import type {
+  AttributeNode,
+  DirectiveNode,
+  TemplateChildNode,
+  CommentNode,
+  ElementNode,
+  TextNode,
+  InterpolationNode
+} from '@vue/compiler-dom'
 import { handleJs } from '../handlers'
 import { containsChinese } from '../utils/regex'
 import { wrapIN18 } from '../utils'
@@ -61,7 +69,7 @@ const transformText = (node: TextNode): string => {
 const transformInterpolation = (node: InterpolationNode): string => {
   let res = ''
   if (node.content.type === NodeTypes.SIMPLE_EXPRESSION) {
-    res = handleJs(node.content.content)
+    res = handleJs(node.content.content?.trim())
   }
   res = `{{ ${res} }}`
 
