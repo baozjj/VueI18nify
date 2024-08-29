@@ -10,70 +10,107 @@ import type {
 } from '@vue/compiler-dom'
 import { handleJs } from '../handlers'
 import { containsChinese } from '../utils/regex'
-import { wrapIN18 } from '../utils'
+import { generateSpaces, wrapIN18 } from '../utils'
 
 type PropNode = AttributeNode | DirectiveNode
 
 export const transformTemplate = (astTree: TemplateChildNode[]): string => {
-  console.log('astTreeastTreeastTree', astTree)
+  return processNodes(astTree, 0, astTree.length > 0 ? astTree[0].loc.source : '')
+}
 
+const processNodes = (
+  nodes: TemplateChildNode[],
+  currentPosition: number,
+  originalSource: string
+): string => {
   let result = ''
+  let position = currentPosition
 
-  for (const node of astTree) {
-    let endTag = true
-
-    switch (node.type) {
-      case NodeTypes.ELEMENT:
-        result += transformElement(node as ElementNode)
-        break
-      case NodeTypes.TEXT:
-        result += transformText(node as TextNode)
-        endTag = false
-        break
-      case NodeTypes.COMMENT:
-        result += (node as CommentNode).loc.source
-        endTag = false
-        break
-      case NodeTypes.INTERPOLATION:
-        result += transformInterpolation(node as InterpolationNode)
-        endTag = false
-        break
-      default:
-        endTag = false
-        break
-    }
-    if (endTag && 'tag' in node) {
-      result += `\n </${node.tag}>`
-    }
+  for (const node of nodes) {
+    const { content, newPosition } = processNode(node, position, originalSource)
+    result += content
+    position = newPosition
   }
+
   return result
 }
 
-const transformElement = (node: ElementNode): string => {
+const processNode = (
+  node: TemplateChildNode,
+  currentPosition: number,
+  originalSource: string
+): { content: string; newPosition: number } => {
+  const startOffset = node.loc.start.offset
+  const endOffset = node.loc.end.offset
+
+  let content = originalSource.slice(currentPosition, startOffset) // 保持源代码中的空格和换行
+  switch (node.type) {
+    case NodeTypes.ELEMENT:
+      content += transformElement(node as ElementNode, startOffset, originalSource)
+      break
+    case NodeTypes.TEXT:
+      content += transformText(node as TextNode)
+      break
+    case NodeTypes.COMMENT:
+      content += originalSource.slice(startOffset, endOffset)
+      break
+    case NodeTypes.INTERPOLATION:
+      content += transformInterpolation(node as InterpolationNode)
+      break
+    default:
+      break
+  }
+
+  return { content, newPosition: endOffset }
+}
+
+const transformElement = (
+  node: ElementNode,
+  currentPosition: number,
+  originalSource: string
+): string => {
   let res = `<${node.tag}`
 
   if (node.props.length !== 0) {
     res += processProps(node.props)
   }
-  res += '>'
+  // 检查自闭和标签
+  const selfClosing = originalSource
+    .slice(node.loc.start.offset, node.loc.end.offset)
+    .endsWith('/>')
+  if (selfClosing) {
+    res += ' />'
+    return res
+  } else {
+    res += '>'
+  }
 
-  res += transformTemplate(node.children)
+  let position = currentPosition + res.length
+
+  const childrenContent = processNodes(node.children, position, originalSource)
+  res += childrenContent
+
+  if (node.loc.start.line !== node.loc.end.line) {
+    res += `\n${generateSpaces(node.loc.end.column - `</${node.tag}>`.length)}`
+  }
+  res += `</${node.tag}>` // 保持结束标签
   return res
 }
 
 const transformText = (node: TextNode): string => {
-  if (!containsChinese(node.content)) return node.content
-  let res = `{{ $t('${node.content.trim()}') }}`
-  return res
+  const content = node.content
+  if (!containsChinese(content)) {
+    return content
+  }
+  return `{{ $t('${content.trim()}') }}`
 }
+
 const transformInterpolation = (node: InterpolationNode): string => {
   let res = ''
   if (node.content.type === NodeTypes.SIMPLE_EXPRESSION) {
     res = handleJs(node.content.content?.trim())
   }
-  res = `{{ ${res} }}`
-
-  return res
+  return `{{ ${res} }}`
 }
 
 const processProps = (props: PropNode[]): string => {
@@ -86,7 +123,6 @@ const processProps = (props: PropNode[]): string => {
 
 const processProp = (prop: PropNode): string => {
   let res = ' '
-
   switch (prop.type) {
     case NodeTypes.ATTRIBUTE:
       const attr = prop as AttributeNode
