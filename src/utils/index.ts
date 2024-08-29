@@ -26,3 +26,7 @@ export const getFileExtension = async (filePath: string): Promise<string> => {
 export const wrapIN18 = (value) => {
   return `$t('${value}')`
 }
+
+export const generateSpaces = (count: number): string => {
+  return ' '.repeat(count > 0 ? count - 1 : 0)
+}
