@@ -127,6 +127,7 @@ export default {
     };
   },
   methods: {
+    // asdasd撒打算
     showMessage(text) {
       alert(`${$t('提示信息:')}${text}`);
     },
