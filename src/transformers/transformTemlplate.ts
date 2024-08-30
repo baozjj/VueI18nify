@@ -10,49 +10,44 @@ import type {
 } from '@vue/compiler-dom'
 import { handleJs } from '../handlers'
 import { containsChinese } from '../utils/regex'
-import { generateSpaces, wrapIN18 } from '../utils'
+import { generateNewLines, generateSpaces, isArrayEmpty, wrapIN18 } from '../utils'
 
 type PropNode = AttributeNode | DirectiveNode
 
 export const transformTemplate = (astTree: TemplateChildNode[]): string => {
-  return processNodes(astTree, 0, astTree.length > 0 ? astTree[0].loc.source : '')
+  // console.log('astTree', astTree)
+
+  return processNodes(astTree)
 }
 
-const processNodes = (
-  nodes: TemplateChildNode[],
-  currentPosition: number,
-  originalSource: string
-): string => {
+const processNodes = (nodes: TemplateChildNode[], startLine = 1): string => {
   let result = ''
-  let position = currentPosition
-
+  let preLine = startLine
   for (const node of nodes) {
-    const { content, newPosition } = processNode(node, position, originalSource)
+    if (preLine != node.loc.start.line) {
+      const newLines = generateNewLines(node.loc.start.line - preLine)
+      const newSpace = generateSpaces(node.loc.start.column)
+      result += newLines + newSpace
+      preLine = node.loc.end.line
+    }
+    const content = processNode(node)
     result += content
-    position = newPosition
   }
 
   return result
 }
 
-const processNode = (
-  node: TemplateChildNode,
-  currentPosition: number,
-  originalSource: string
-): { content: string; newPosition: number } => {
-  const startOffset = node.loc.start.offset
-  const endOffset = node.loc.end.offset
-
-  let content = originalSource.slice(currentPosition, startOffset) // 保持源代码中的空格和换行
+const processNode = (node: TemplateChildNode): string => {
+  let content = ''
   switch (node.type) {
     case NodeTypes.ELEMENT:
-      content += transformElement(node as ElementNode, startOffset, originalSource)
+      content += transformElement(node as ElementNode)
       break
     case NodeTypes.TEXT:
       content += transformText(node as TextNode)
       break
     case NodeTypes.COMMENT:
-      content += originalSource.slice(startOffset, endOffset)
+      content += transformComment(node as CommentNode)
       break
     case NodeTypes.INTERPOLATION:
       content += transformInterpolation(node as InterpolationNode)
@@ -61,34 +56,24 @@ const processNode = (
       break
   }
 
-  return { content, newPosition: endOffset }
+  return content
 }
 
-const transformElement = (
-  node: ElementNode,
-  currentPosition: number,
-  originalSource: string
-): string => {
+const transformElement = (node: ElementNode): string => {
   let res = `<${node.tag}`
 
-  if (node.props.length !== 0) {
+  if (!isArrayEmpty(node.props)) {
     res += processProps(node.props)
   }
   // 检查自闭和标签
-  const selfClosing = originalSource
-    .slice(node.loc.start.offset, node.loc.end.offset)
-    .endsWith('/>')
-  if (selfClosing) {
-    res += ' />'
-    return res
-  } else {
-    res += '>'
+
+  res += '>'
+
+  if (!isArrayEmpty(node.children)) {
+    const line = node.loc.start.line
+    const childrenContent = processNodes(node.children, line)
+    res += childrenContent
   }
-
-  let position = currentPosition + res.length
-
-  const childrenContent = processNodes(node.children, position, originalSource)
-  res += childrenContent
 
   if (node.loc.start.line !== node.loc.end.line) {
     res += `\n${generateSpaces(node.loc.end.column - `</${node.tag}>`.length)}`
@@ -104,6 +89,10 @@ const transformText = (node: TextNode): string => {
   }
   return `{{ $t('${content.trim()}') }}`
 }
+const transformComment = (node: CommentNode): string => {
+  const content = node.loc.source
+  return content
+}
 
 const transformInterpolation = (node: InterpolationNode): string => {
   let res = ''
@@ -118,6 +107,8 @@ const processProps = (props: PropNode[]): string => {
   for (const prop of props) {
     res += processProp(prop)
   }
+  console.log('proppropprop', res)
+
   return res
 }
 

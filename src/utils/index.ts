@@ -30,3 +30,11 @@ export const wrapIN18 = (value) => {
 export const generateSpaces = (count: number): string => {
   return ' '.repeat(count > 0 ? count - 1 : 0)
 }
+
+export const generateNewLines = (lineCount: number): string => {
+  return '\n'.repeat(lineCount)
+}
+
+export const isArrayEmpty = (array: Array<any>) => {
+  return array.length === 0
+}
