@@ -13,10 +13,10 @@
     <p>{{ $t('固定部分') }}{{ dynamicPart }}</p>
 
     <!-- 元素属性：普通属性 -->
-    <img :alt="$t('示例图片')" src="/path/to/image.png" />
+    <img :alt="$t('示例图片')" src="/path/to/image.png"></img>
 
     <!-- 元素属性：动态属性 -->
-    <input :placeholder="placeholderText" />
+    <input :placeholder="placeholderText"></input>
 
     <!-- 指令：v-bind -->
     <button @click="showMessage($t('点击了按钮'))">{{ $t('点我') }}</button>
@@ -35,21 +35,15 @@
     </ul>
 
     <!-- 动态类名和内联样式 -->
-    <p
-      :class="{
-        highlight: isHighlighted
-      }"
-      :style="{
-        color: textColor
-      }"
-    >
-      {{ $t('动态样式和类名') }}
-    </p>
+    <p :class="{
+  highlight: isHighlighted
+}" :style="{
+  color: textColor
+}">{{ $t('动态样式和类名') }}</p>
 
     <!-- 插值和HTML混用 -->
-    <p>
-      {{ $t('请点击') }}<a href="#">{{ linkText }}</a
-      >{{ $t('了解更多信息。') }}
+    <p>{{ $t('请点击') }}
+          <a href="#">{{ linkText }}</a>{{ $t('了解更多信息。') }}
     </p>
 
     <!-- 内嵌模板 -->
@@ -64,7 +58,7 @@
     <button :click="dynamicEventHandler">{{ $t('动态事件处理') }}</button>
 
     <!-- 嵌套组件 -->
-    <ChildComponent :greeting="childGreeting" />
+    <ChildComponent :greeting="childGreeting"></ChildComponent>
 
     <!-- 复杂动态属性 -->
     <!-- <input v-bind="{ value: dynamicValue, title: dynamicTitle }" /> -->
@@ -91,18 +85,18 @@
     <p v-html="htmlContent"></p>
 
     <!-- 表单元素 -->
-    <input v-model="formInput" :placeholder="$t('请输入内容')" />
+    <input v-model="formInput" :placeholder="$t('请输入内容')"></input>
     <textarea v-model="formTextarea">{{ $t('默认文本') }}</textarea>
     <select v-model="formSelect">
       <option>{{ $t('选项一') }}</option>
       <option>{{ $t('选项二') }}</option>
     </select>
   </div>
-</template>
-<script>
-import ChildComponent from './ChildComponent.vue'
-import ComponentWithSlot from './ComponentWithSlot.vue'
-import ScopedSlotComponent from './ScopedSlotComponent.vue'
+</template> 
+ <script> 
+ import ChildComponent from './ChildComponent.vue';
+import ComponentWithSlot from './ComponentWithSlot.vue';
+import ScopedSlotComponent from './ScopedSlotComponent.vue';
 export default {
   name: 'App',
   components: {
@@ -130,29 +124,29 @@ export default {
       formSelect: $t('选项一'),
       dynamicPart: $t('动态部分'),
       isTemplateVisible: true
-    }
+    };
   },
   methods: {
     showMessage(text) {
-      alert(`${$t('提示信息:')}${text}`)
+      alert(`${$t('提示信息:')}${text}`);
     },
     log(message) {
-      console.log(message)
+      console.log(message);
     },
     dynamicEventHandler() {
-      console.log($t('动态事件触发'))
+      console.log($t('动态事件触发'));
     }
   },
   filters: {
     capitalize(value) {
-      if (!value) return ''
-      value = value.toString()
-      return value.charAt(0).toUpperCase() + value.slice(1)
+      if (!value) return '';
+      value = value.toString();
+      return value.charAt(0).toUpperCase() + value.slice(1);
     }
   }
-}
-</script>
-<style scoped>
+} 
+</script> 
+ <style scoped>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   text-align: center;
