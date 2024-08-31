@@ -2,7 +2,7 @@ import { generateJS } from '../generates/generateJS'
 import { parseJS, parserTemplate } from '../parsers'
 import { transformJS } from '../transformers/transformJS'
 import { transformTemplate } from '../transformers/transformTemlplate'
-import { preprocessVueFile } from '../utils/preprocessVueFile'
+import { preprocessVueFile } from '../service/utils/preprocessVueFile'
 
 export const handleVue = (content: string): string => {
   // 解析、转换、生成 Vue 文件

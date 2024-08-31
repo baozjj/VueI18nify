@@ -6,11 +6,20 @@ import type {
   CommentNode,
   ElementNode,
   TextNode,
-  InterpolationNode
+  InterpolationNode,
+  SimpleExpressionNode
 } from '@vue/compiler-dom'
 import { handleJs } from '../handlers'
-import { containsChinese } from '../utils/regex'
-import { generateNewLines, generateSpaces, isArrayEmpty, wrapIN18 } from '../utils'
+import { containsChinese } from '../service/utils/regex'
+import {
+  generateNewLines,
+  generateSpaces,
+  isArrayEmpty,
+  isCurlyWrapped,
+  unwrapVar,
+  wrapIN18,
+  wrapVar
+} from '../service/utils'
 
 type PropNode = AttributeNode | DirectiveNode
 
@@ -107,8 +116,6 @@ const processProps = (props: PropNode[]): string => {
   for (const prop of props) {
     res += processProp(prop)
   }
-  console.log('proppropprop', res)
-
   return res
 }
 
@@ -126,8 +133,21 @@ const processProp = (prop: PropNode): string => {
       break
     case NodeTypes.DIRECTIVE:
       const dir = prop as DirectiveNode
-      res += `${dir.rawName}="${handleJs(dir.exp?.content ?? '')}"`
+      let { content } = prop.exp as SimpleExpressionNode
+
+      content = handleObjProp(content)
+      res += `${dir.rawName}="${content}"`
       break
   }
   return res
+}
+
+const handleObjProp = (content: string) => {
+  if (isCurlyWrapped(content)) {
+    const wrappedContent = wrapVar(content)
+    const code = handleJs(wrappedContent)
+    return unwrapVar(code)
+  }
+
+  return handleJs(content)
 }

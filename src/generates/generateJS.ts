@@ -2,6 +2,8 @@ import generate from '@babel/generator'
 import type { Node } from '@babel/types'
 
 export function generateJS(ast: Node): string {
+  console.log(12312312312312312)
+
   const output = generate(ast, {
     jsescOption: {
       minimal: true, // 生成字符串时尽可能减少转义。

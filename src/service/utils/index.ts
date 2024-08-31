@@ -1,5 +1,6 @@
 import { readFile } from 'node:fs/promises'
 import { extname } from 'node:path'
+import { VAR_DECLARATION_PREFIX } from '../const'
 
 // 读取文件内容，并确保异常处理
 export const getFileContent = async (filePath: string): Promise<string> => {
@@ -37,4 +38,28 @@ export const generateNewLines = (lineCount: number): string => {
 
 export const isArrayEmpty = (array: Array<any>) => {
   return array.length === 0
+}
+
+export const isCurlyWrapped = (str: string): boolean => {
+  const trimmedStr = str.trim()
+  return trimmedStr.startsWith('{') && trimmedStr.endsWith('}')
+}
+
+/**
+ * 将表达式包裹在变量声明中
+ * @param content - 要包裹的内容
+ * @returns 包裹后的字符串
+ */
+export const wrapVar = (content: string): string => {
+  return `${VAR_DECLARATION_PREFIX}${content.trim()};`
+}
+
+/**
+ * 去除变量声明部分
+ * @param code - 完整的代码字符串
+ * @returns 去除变量声明后的代码字符串
+ */
+export const unwrapVar = (code: string): string => {
+  const startPos = code.indexOf('{')
+  return code.slice(startPos, code.lastIndexOf('}') + 1)
 }

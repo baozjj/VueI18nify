@@ -1,7 +1,7 @@
 import traverse from '@babel/traverse'
 import type { Node } from '@babel/types'
 import * as t from '@babel/types'
-import { containsChinese } from '../utils/regex'
+import { containsChinese } from '../service/utils/regex'
 
 /**
  * 将包含中文的字符串转换为 Vue I18n 的 `$t` 函数调用以实现国际化。

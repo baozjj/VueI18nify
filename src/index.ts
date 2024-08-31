@@ -1,5 +1,5 @@
 import { writeFile } from 'node:fs/promises'
-import { getFileContent, getFileExtension } from './utils'
+import { getFileContent, getFileExtension } from './service/utils'
 import { fileTypeHandlers } from './handlers'
 
 const main = async () => {
