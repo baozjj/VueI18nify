@@ -133,10 +133,14 @@ const processProp = (prop: PropNode): string => {
       break
     case NodeTypes.DIRECTIVE:
       const dir = prop as DirectiveNode
-      let { content } = prop.exp as SimpleExpressionNode
+      let content = (prop.exp as SimpleExpressionNode)?.content ?? ''
+      if (!!content) {
+        content = handleObjProp(content)
+        res += `${dir.rawName}="${content}"`
+      } else {
+        res += `${dir.rawName}`
+      }
 
-      content = handleObjProp(content)
-      res += `${dir.rawName}="${content}"`
       break
   }
   return res
