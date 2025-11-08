@@ -3,6 +3,7 @@ import { join, extname } from 'node:path'
 import { getFileContent, getFileExtension } from './service/utils'
 import { fileTypeHandlers } from './handlers'
 import { SUPPORTED_EXTENSIONS } from './service/const'
+import { i18nCollector } from './service/i18nCollector'
 
 /**
  * 递归遍历目录，找到所有符合条件的文件
@@ -61,6 +62,10 @@ const processFile = async (filePath: string): Promise<void> => {
 const processDirectory = async (dirPath: string): Promise<void> => {
   console.log(`开始处理目录: ${dirPath}`)
 
+  // 清空之前的收集并设置输出目录
+  i18nCollector.clear()
+  i18nCollector.setOutputDir(dirPath)
+
   // 获取所有符合条件的文件
   const files = await getAllFiles(dirPath, [...SUPPORTED_EXTENSIONS])
 
@@ -72,15 +77,23 @@ const processDirectory = async (dirPath: string): Promise<void> => {
   }
 
   console.log(`处理完成！共处理 ${files.length} 个文件`)
+
+  // 生成翻译配置文件
+  if (i18nCollector.getCount() > 0) {
+    const outputPath = await i18nCollector.generateFile()
+    console.log(`\n✓ 已生成翻译配置文件: ${outputPath}`)
+    console.log(`✓ 提取到 ${i18nCollector.getCount()} 个中文文本`)
+  } else {
+    console.log(`\n未发现需要翻译的中文文本`)
+  }
 }
 
 /**
  * 主函数入口
  */
 const main = async (): Promise<void> => {
-  // 批量处理目录
-  const projectDir = '/Users/baozj/Desktop/VueI18nify/src/test/batch-test'
-  await processDirectory(projectDir)
+  const anotherProjectDir = '/Users/baozj/Desktop/VueI18nify/src/test/batch-test'
+  await processDirectory(anotherProjectDir)
 }
 
 main()

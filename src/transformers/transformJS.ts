@@ -3,6 +3,7 @@ import type { Node, StringLiteral, TemplateLiteral } from '@babel/types'
 import * as t from '@babel/types'
 import { containsChinese } from '../service/utils/regex'
 import { I18N_FUNCTION_NAMES } from '../service/const'
+import { i18nCollector } from '../service/i18nCollector'
 
 /**
  * 检查字符串字面量是否已经在 i18n 函数调用中
@@ -34,6 +35,9 @@ const transformJSWithFunction = (ast: Node, functionName: string): void => {
     StringLiteral(path: NodePath<StringLiteral>) {
       // 如果节点值包含中文，则进行替换
       if (containsChinese(path.node.value)) {
+        // 收集中文文本
+        i18nCollector.add(path.node.value)
+
         // 检查是否已经被 i18n 函数包裹
         if (isAlreadyWrappedInI18n(path, functionName)) {
           return // 跳过已经处理过的字符串
@@ -54,6 +58,9 @@ const transformJSWithFunction = (ast: Node, functionName: string): void => {
 
         // 对含有中文的固定字符串部分进行替换
         if (containsChinese(oldVal)) {
+          // 收集中文文本
+          i18nCollector.add(oldVal.trim())
+
           // 检查是否已经包含 i18n 函数调用
           if (oldVal.includes('$t(') || oldVal.includes('t(')) {
             return // 跳过已经处理过的部分

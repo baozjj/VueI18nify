@@ -20,6 +20,7 @@ import {
   wrapI18NTemplate,
   wrapVar
 } from '../service/utils'
+import { i18nCollector } from '../service/i18nCollector'
 
 type PropNode = AttributeNode | DirectiveNode
 
@@ -119,6 +120,10 @@ const transformText = (node: TextNode): string => {
   if (!containsChinese(content)) {
     return content
   }
+
+  // 收集中文文本
+  i18nCollector.add(content.trim())
+
   // 检查是否已经被 t() 包裹
   if (content.trim().startsWith('t(') || content.includes('t(')) {
     return content
@@ -174,6 +179,9 @@ const processProp = (prop: PropNode): string => {
       const attr = prop as AttributeNode
       const value = attr.value?.content ?? ''
       if (containsChinese(value)) {
+        // 收集中文文本
+        i18nCollector.add(value)
+
         // 检查是否已经被 t() 包裹
         if (value.includes('t(')) {
           res += `${attr.name}="${value}"`
