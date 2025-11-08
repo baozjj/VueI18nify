@@ -2,11 +2,16 @@ import { writeFile, readdir, stat } from 'node:fs/promises'
 import { join, extname } from 'node:path'
 import { getFileContent, getFileExtension } from './service/utils'
 import { fileTypeHandlers } from './handlers'
+import { SUPPORTED_EXTENSIONS } from './service/const'
 
-// 递归遍历目录，找到所有符合条件的文件
+/**
+ * 递归遍历目录，找到所有符合条件的文件
+ * @param dirPath - 目录路径
+ * @param extensions - 支持的文件扩展名数组（如 ['.vue', '.js', '.ts']）
+ * @returns 符合条件的文件路径数组
+ */
 const getAllFiles = async (dirPath: string, extensions: string[]): Promise<string[]> => {
   const files: string[] = []
-
   const items = await readdir(dirPath)
 
   for (const item of items) {
@@ -29,11 +34,14 @@ const getAllFiles = async (dirPath: string, extensions: string[]): Promise<strin
   return files
 }
 
-// 处理单个文件
-const processFile = async (filePath: string) => {
+/**
+ * 处理单个文件的 i18n 转换
+ * @param filePath - 文件路径
+ */
+const processFile = async (filePath: string): Promise<void> => {
   try {
     const content = await getFileContent(filePath)
-    const fileExtname = await getFileExtension(filePath)
+    const fileExtname = getFileExtension(filePath)
 
     const codeRes = fileTypeHandlers(fileExtname, content)
 
@@ -46,15 +54,15 @@ const processFile = async (filePath: string) => {
   }
 }
 
-// 批量处理目录
-const processDirectory = async (dirPath: string) => {
+/**
+ * 批量处理目录下的所有文件
+ * @param dirPath - 目录路径
+ */
+const processDirectory = async (dirPath: string): Promise<void> => {
   console.log(`开始处理目录: ${dirPath}`)
 
-  // 支持的文件扩展名
-  const extensions = ['.vue', '.js', '.ts']
-
   // 获取所有符合条件的文件
-  const files = await getAllFiles(dirPath, extensions)
+  const files = await getAllFiles(dirPath, [...SUPPORTED_EXTENSIONS])
 
   console.log(`找到 ${files.length} 个文件`)
 
@@ -66,7 +74,10 @@ const processDirectory = async (dirPath: string) => {
   console.log(`处理完成！共处理 ${files.length} 个文件`)
 }
 
-const main = async () => {
+/**
+ * 主函数入口
+ */
+const main = async (): Promise<void> => {
   // 批量处理目录
   const projectDir = '/Users/baozj/Desktop/VueI18nify/src/test/batch-test'
   await processDirectory(projectDir)

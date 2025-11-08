@@ -2,7 +2,13 @@ import { FileType } from '../types/interface'
 import { handleJs } from './jsHandler'
 import { handleVue } from './vueHandler'
 
-export const fileTypeHandlers = (fileType: string, content: string) => {
+/**
+ * 根据文件类型分发处理逻辑
+ * @param fileType - 文件扩展名（如 '.vue', '.js', '.ts'）
+ * @param content - 文件内容
+ * @returns 转换后的文件内容，不支持的文件类型返回空字符串
+ */
+export const fileTypeHandlers = (fileType: string, content: string): string => {
   let codeRes: string = ''
   switch (fileType) {
     case FileType.JS:
@@ -13,7 +19,8 @@ export const fileTypeHandlers = (fileType: string, content: string) => {
       codeRes = handleVue(content)
       break
     default:
-      console.error(`Unsupported file type: ${fileType}`)
+      console.error(`不支持的文件类型: ${fileType}`)
+      return ''
   }
 
   return codeRes

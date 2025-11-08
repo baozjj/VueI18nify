@@ -1,9 +1,6 @@
-export enum JsParserType {
-  js,
-  vue2,
-  vue3
-}
-
+/**
+ * 支持的文件类型枚举
+ */
 export enum FileType {
   JS = '.js',
   TS = '.ts',

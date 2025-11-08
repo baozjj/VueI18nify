@@ -23,17 +23,26 @@ import {
 
 type PropNode = AttributeNode | DirectiveNode
 
+/**
+ * 转换 Vue 模板 AST，将包含中文的文本转换为 i18n 函数调用
+ * @param astTree - Vue 模板 AST 节点数组
+ * @returns 转换后的模板字符串
+ */
 export const transformTemplate = (astTree: TemplateChildNode[]): string => {
-  // console.log('astTree', astTree)
-
   return processNodes(astTree)
 }
 
-const processNodes = (nodes: TemplateChildNode[], startLine = 1): string => {
+/**
+ * 处理多个模板节点，保持原有的格式和缩进
+ * @param nodes - 模板节点数组
+ * @param startLine - 起始行号
+ * @returns 处理后的模板字符串
+ */
+const processNodes = (nodes: TemplateChildNode[], startLine: number = 1): string => {
   let result = ''
   let preLine = startLine
   for (const node of nodes) {
-    if (preLine != node.loc.start.line) {
+    if (preLine !== node.loc.start.line) {
       const newLines = generateNewLines(node.loc.start.line - preLine)
       const newSpace = generateSpaces(node.loc.start.column)
       result += newLines + newSpace
@@ -46,6 +55,11 @@ const processNodes = (nodes: TemplateChildNode[], startLine = 1): string => {
   return result
 }
 
+/**
+ * 处理单个模板节点
+ * @param node - 模板节点
+ * @returns 处理后的节点字符串
+ */
 const processNode = (node: TemplateChildNode): string => {
   let content = ''
   switch (node.type) {
@@ -68,13 +82,17 @@ const processNode = (node: TemplateChildNode): string => {
   return content
 }
 
+/**
+ * 转换元素节点
+ * @param node - 元素节点
+ * @returns 转换后的元素字符串
+ */
 const transformElement = (node: ElementNode): string => {
   let res = `<${node.tag}`
 
   if (!isArrayEmpty(node.props)) {
     res += processProps(node.props)
   }
-  // 检查自闭和标签
 
   res += '>'
 
@@ -87,10 +105,15 @@ const transformElement = (node: ElementNode): string => {
   if (node.loc.start.line !== node.loc.end.line) {
     res += `\n${generateSpaces(node.loc.end.column - `</${node.tag}>`.length)}`
   }
-  res += `</${node.tag}>` // 保持结束标签
+  res += `</${node.tag}>`
   return res
 }
 
+/**
+ * 转换文本节点，将包含中文的文本转换为 t() 函数调用
+ * @param node - 文本节点
+ * @returns 转换后的文本字符串
+ */
 const transformText = (node: TextNode): string => {
   const content = node.content
   if (!containsChinese(content)) {
@@ -102,11 +125,22 @@ const transformText = (node: TextNode): string => {
   }
   return `{{ t('${content.trim()}') }}`
 }
+
+/**
+ * 转换注释节点
+ * @param node - 注释节点
+ * @returns 注释字符串
+ */
 const transformComment = (node: CommentNode): string => {
   const content = node.loc.source
   return content
 }
 
+/**
+ * 转换插值表达式节点
+ * @param node - 插值节点
+ * @returns 转换后的插值表达式字符串
+ */
 const transformInterpolation = (node: InterpolationNode): string => {
   let res = ''
   if (node.content.type === NodeTypes.SIMPLE_EXPRESSION) {
@@ -115,6 +149,11 @@ const transformInterpolation = (node: InterpolationNode): string => {
   return `{{ ${res} }}`
 }
 
+/**
+ * 处理元素的所有属性
+ * @param props - 属性节点数组
+ * @returns 处理后的属性字符串
+ */
 const processProps = (props: PropNode[]): string => {
   let res = ''
   for (const prop of props) {
@@ -123,6 +162,11 @@ const processProps = (props: PropNode[]): string => {
   return res
 }
 
+/**
+ * 处理单个属性节点
+ * @param prop - 属性节点
+ * @returns 处理后的属性字符串
+ */
 const processProp = (prop: PropNode): string => {
   let res = ' '
   switch (prop.type) {
@@ -143,19 +187,23 @@ const processProp = (prop: PropNode): string => {
     case NodeTypes.DIRECTIVE:
       const dir = prop as DirectiveNode
       let content = (prop.exp as SimpleExpressionNode)?.content ?? ''
-      if (!!content) {
+      if (content) {
         content = handleObjProp(content)
         res += `${dir.rawName}="${content}"`
       } else {
         res += `${dir.rawName}`
       }
-
       break
   }
   return res
 }
 
-const handleObjProp = (content: string) => {
+/**
+ * 处理对象属性表达式
+ * @param content - 属性表达式内容
+ * @returns 处理后的表达式字符串
+ */
+const handleObjProp = (content: string): string => {
   if (isCurlyWrapped(content)) {
     const wrappedContent = wrapVar(content)
     const code = handleJsInTemplate(wrappedContent)

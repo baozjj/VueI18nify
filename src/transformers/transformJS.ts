@@ -1,14 +1,16 @@
-import traverse from '@babel/traverse'
-import type { Node } from '@babel/types'
+import traverse, { NodePath } from '@babel/traverse'
+import type { Node, StringLiteral, TemplateLiteral } from '@babel/types'
 import * as t from '@babel/types'
 import { containsChinese } from '../service/utils/regex'
+import { I18N_FUNCTION_NAMES } from '../service/const'
 
 /**
  * 检查字符串字面量是否已经在 i18n 函数调用中
  * @param path - AST 路径
  * @param functionName - 要检查的函数名（'$t' 或 't'）
+ * @returns 如果已经被 i18n 函数包裹则返回 true
  */
-const isAlreadyWrappedInI18n = (path: any, functionName: string = '$t'): boolean => {
+const isAlreadyWrappedInI18n = (path: NodePath<StringLiteral>, functionName: string = '$t'): boolean => {
   // 检查父节点是否是 CallExpression
   if (path.parent && t.isCallExpression(path.parent)) {
     const callee = path.parent.callee
@@ -25,11 +27,11 @@ const isAlreadyWrappedInI18n = (path: any, functionName: string = '$t'): boolean
  * @param ast - 解析后的 JavaScript 抽象语法树 (AST)
  * @param functionName - 使用的 i18n 函数名（'$t' 或 't'）
  */
-const transformJSWithFunction = (ast: Node, functionName: string) => {
+const transformJSWithFunction = (ast: Node, functionName: string): void => {
   // 使用 babel-traverse 进行 AST 遍历
   traverse(ast, {
     // 处理字符串字面量节点
-    StringLiteral(path) {
+    StringLiteral(path: NodePath<StringLiteral>) {
       // 如果节点值包含中文，则进行替换
       if (containsChinese(path.node.value)) {
         // 检查是否已经被 i18n 函数包裹
@@ -39,14 +41,13 @@ const transformJSWithFunction = (ast: Node, functionName: string) => {
 
         // 创建 i18n 函数调用节点替换原始字符串字面量
         const replaceNode = t.callExpression(t.identifier(functionName), [t.stringLiteral(path.node.value)])
-        console.log('path.node.valuepath.node.valuepath.node.value', path.node.value)
 
         path.replaceWith(replaceNode) // 执行替换
         path.skip() // 跳过当前节点的子节点
       }
     },
     // 处理模板字符串节点
-    TemplateLiteral(path) {
+    TemplateLiteral(path: NodePath<TemplateLiteral>) {
       // 遍历模板字符串中的固定字符串部分
       path.node.quasis.forEach((quasi) => {
         const oldVal = quasi.value.raw
@@ -71,18 +72,18 @@ const transformJSWithFunction = (ast: Node, functionName: string) => {
  * 将包含中文的字符串转换为 Vue I18n 的 `$t` 函数调用以实现国际化。
  * 用于 JavaScript/TypeScript 代码（<script> 标签内）
  *
- * @param {Node} ast - 解析后的 JavaScript 抽象语法树 (AST)
+ * @param ast - 解析后的 JavaScript 抽象语法树 (AST)
  */
-export const transformJS = (ast: Node) => {
-  transformJSWithFunction(ast, '$t')
+export const transformJS = (ast: Node): void => {
+  transformJSWithFunction(ast, I18N_FUNCTION_NAMES.SCRIPT)
 }
 
 /**
  * 将包含中文的字符串转换为 Vue I18n 的 `t` 函数调用以实现国际化。
  * 用于 Vue 模板中的 JavaScript 表达式
  *
- * @param {Node} ast - 解析后的 JavaScript 抽象语法树 (AST)
+ * @param ast - 解析后的 JavaScript 抽象语法树 (AST)
  */
-export const transformJSForTemplate = (ast: Node) => {
-  transformJSWithFunction(ast, 't')
+export const transformJSForTemplate = (ast: Node): void => {
+  transformJSWithFunction(ast, I18N_FUNCTION_NAMES.TEMPLATE)
 }
