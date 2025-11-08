@@ -8,7 +8,7 @@ export const getFileContent = async (filePath: string): Promise<string> => {
     const content = await readFile(filePath, 'utf8')
     return content
   } catch (error) {
-    console.error(`Error reading file ${filePath}: ${error.message}`)
+    console.error(`Error reading file ${filePath}: ${(error as Error).message}`)
     return ''
   }
 }
@@ -19,13 +19,17 @@ export const getFileExtension = async (filePath: string): Promise<string> => {
     const ext = await extname(filePath)
     return ext
   } catch (error) {
-    console.error(`Error getting file extension from ${filePath}: ${error.message}`)
+    console.error(`Error getting file extension from ${filePath}: ${(error as Error).message}`)
     return ''
   }
 }
 
-export const wrapIN18 = (value) => {
+export const wrapIN18 = (value: string) => {
   return `$t('${value}')`
+}
+
+export const wrapI18NTemplate = (value: string) => {
+  return `t('${value}')`
 }
 
 export const generateSpaces = (count: number): string => {

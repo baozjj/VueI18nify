@@ -9,7 +9,7 @@ import type {
   InterpolationNode,
   SimpleExpressionNode
 } from '@vue/compiler-dom'
-import { handleJs } from '../handlers'
+import { handleJsInTemplate } from '../handlers'
 import { containsChinese } from '../service/utils/regex'
 import {
   generateNewLines,
@@ -17,7 +17,7 @@ import {
   isArrayEmpty,
   isCurlyWrapped,
   unwrapVar,
-  wrapIN18,
+  wrapI18NTemplate,
   wrapVar
 } from '../service/utils'
 
@@ -96,7 +96,11 @@ const transformText = (node: TextNode): string => {
   if (!containsChinese(content)) {
     return content
   }
-  return `{{ $t('${content.trim()}') }}`
+  // 检查是否已经被 t() 包裹
+  if (content.trim().startsWith('t(') || content.includes('t(')) {
+    return content
+  }
+  return `{{ t('${content.trim()}') }}`
 }
 const transformComment = (node: CommentNode): string => {
   const content = node.loc.source
@@ -106,7 +110,7 @@ const transformComment = (node: CommentNode): string => {
 const transformInterpolation = (node: InterpolationNode): string => {
   let res = ''
   if (node.content.type === NodeTypes.SIMPLE_EXPRESSION) {
-    res = handleJs(node.content.content?.trim())
+    res = handleJsInTemplate(node.content.content?.trim())
   }
   return `{{ ${res} }}`
 }
@@ -126,7 +130,12 @@ const processProp = (prop: PropNode): string => {
       const attr = prop as AttributeNode
       const value = attr.value?.content ?? ''
       if (containsChinese(value)) {
-        res += `:${attr.name}="${wrapIN18(value)}"`
+        // 检查是否已经被 t() 包裹
+        if (value.includes('t(')) {
+          res += `${attr.name}="${value}"`
+        } else {
+          res += `:${attr.name}="${wrapI18NTemplate(value)}"`
+        }
       } else {
         res += `${attr.name}="${value}"`
       }
@@ -149,9 +158,9 @@ const processProp = (prop: PropNode): string => {
 const handleObjProp = (content: string) => {
   if (isCurlyWrapped(content)) {
     const wrappedContent = wrapVar(content)
-    const code = handleJs(wrappedContent)
+    const code = handleJsInTemplate(wrappedContent)
     return unwrapVar(code)
   }
 
-  return handleJs(content)
+  return handleJsInTemplate(content)
 }
